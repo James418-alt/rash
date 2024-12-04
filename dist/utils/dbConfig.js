@@ -13,7 +13,7 @@ exports.dbConfig = void 0;
 const console_1 = require("console");
 const mongoose_1 = require("mongoose");
 const dbConfig = () => __awaiter(void 0, void 0, void 0, function* () {
-    const url = "mongodb://localhost:27017/backdb";
+    const url = "mongodb+srv://ebifegha123:ebifegha123@gomenticode.1l9lbmv.mongodb.net/rashdb?retryWrites=true&w=majority&appName=GomentiCode";
     yield (0, mongoose_1.connect)(url).then(() => {
         (0, console_1.log)("Server Up");
     });
