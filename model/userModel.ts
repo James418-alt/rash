@@ -1,14 +1,16 @@
-import { model, Schema } from "mongoose";
+import { model, Schema, Types } from "mongoose";
 interface iUser {
   name: string;
-  email: string;
-  charge: number;
+  coupon: string;
+  orders: [{}];
+  agentId: string;
 }
-const userModel = new Schema<iUser>(
+const userModel = new Schema(
   {
     name: { type: String },
-    email: { type: String },
-    charge: { type: Number, default: 0 },
+    coupon: { type: String, require: true },
+    agentId: { type: String },
+    orders: [{ type: Types.ObjectId, ref: "orders" }],
   },
   { timestamps: true }
 );
