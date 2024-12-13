@@ -5,4 +5,7 @@ const agentContoller_1 = require("../controller/agentContoller");
 const agentRouter = (0, express_1.Router)();
 agentRouter.post("/agentSignup", agentContoller_1.createAgent);
 agentRouter.delete("/delete-agent/:agentId", agentContoller_1.deletAgent);
+agentRouter.patch("/verify-agent/:agentId", agentContoller_1.verifyAgent);
+agentRouter.post("/forget-password", agentContoller_1.forgetPass);
+agentRouter.patch("/reset-password/:agentId", agentContoller_1.resetPassword);
 exports.default = agentRouter;
