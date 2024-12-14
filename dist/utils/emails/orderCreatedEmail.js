@@ -14,7 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const console_1 = require("console");
 const nodemailer_1 = __importDefault(require("nodemailer"));
-const sendEmail = (user) => __awaiter(void 0, void 0, void 0, function* () {
+const OrderEmail = (user, customer) => __awaiter(void 0, void 0, void 0, function* () {
     const transport = nodemailer_1.default.createTransport({
         host: "smtp.gmail.com",
         port: 465,
@@ -28,34 +28,57 @@ const sendEmail = (user) => __awaiter(void 0, void 0, void 0, function* () {
         .sendMail({
         from: `WasherMan <ebifegha123@gmail.com>`,
         to: `${user.email}`,
-        subject: "Verify Your Email Account",
-        html: `  <div
+        subject: "Order Created",
+        html: `  <body style="padding: 0; margin: 0; background-color: rgb(221, 220, 220)">
+    <div
       style="background-color: rgb(221, 220, 220); padding: 12px; height: auto"
     >
-      <h1 style="text-align: center">Verify your email address.</h1>
-      <p>Hi, ${user.name}</p>
+      <h1 style="text-align: center">Order Confirmation</h1>
 
-      <p>
-        Someone tried to sign up for a WasherMan account with ${user.email} if it was
-        you, enter this verification code in the app:
-      </p>
-      <h1>${user.verifyToken}</h1>
-      <button
-        style="
-          border: none;
-          background-color: black;
-          color: white;
-          font-size: 18px;
-          padding: 10px;
-          font-weight: bold;
-        "
-      >
-        Verify Account
-      </button>
-    </div>`,
+      <div>
+        <p>You're getting this emial because a new order has been created</p>
+        <div>
+          <h3>Order Summary</h3>
+          <div style="width: 100%">
+            <div style="display: flex; gap: 10px; width: 100%">
+              <p>Customer Name:</p>
+              <p>${customer.name}</p>
+            </div>
+            <div style="display: flex; gap: 10px; width: 100%">
+              <p>Customer Address:</p>
+              <p>Address</p>
+            </div>
+            <div style="display: flex; gap: 10px; width: 100%">
+              <p>Customer Name:</p>
+              <p>Gomenti</p>
+            </div>
+            <div style="display: flex; gap: 10px; width: 100%">
+              <p>Amount:</p>
+              <p>#45,000.00</p>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <button
+            style="
+              border: none;
+              background-color: black;
+              color: white;
+              font-size: 18px;
+              padding: 10px;
+              font-weight: bold;
+            "
+          >
+            View Order
+          </button>
+        </div>
+      </div>
+    </div>
+  </body>`,
     })
         .then(() => {
         (0, console_1.log)("Email Sent");
     });
 });
-exports.default = sendEmail;
+exports.default = OrderEmail;

@@ -6,4 +6,5 @@ const router = (0, express_1.Router)();
 router.post("/register/:agentId", userController_1.Register);
 router.delete("/delete-user/:agentId/:userId", userController_1.deleteUser);
 router.patch("/update/:ID", userController_1.Increase);
+router.patch("/change-agent/:agentId/:userId", userController_1.changeAgent);
 exports.default = router;

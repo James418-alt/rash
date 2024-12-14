@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteUser = exports.Register = exports.Increase = void 0;
+exports.deleteUser = exports.changeAgent = exports.Register = exports.Increase = void 0;
 const userModel_1 = __importDefault(require("../model/userModel"));
 const agentModel_1 = __importDefault(require("../model/agentModel"));
 const Increase = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -48,6 +48,35 @@ const Register = (request, response) => __awaiter(void 0, void 0, void 0, functi
     }
 });
 exports.Register = Register;
+const changeAgent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    var _b;
+    const { coupon } = req.body;
+    const { agentId, userId } = req.params;
+    const agent = yield agentModel_1.default.findById(agentId);
+    const user = yield userModel_1.default.findById(userId);
+    const prevAgent = yield agentModel_1.default.findById(user === null || user === void 0 ? void 0 : user.agentId);
+    if (agent) {
+        if (coupon === agent.coupon) {
+            prevAgent === null || prevAgent === void 0 ? void 0 : prevAgent.customers.pull(userId);
+            prevAgent === null || prevAgent === void 0 ? void 0 : prevAgent.save();
+            const getD = yield userModel_1.default.findByIdAndUpdate(userId, { agentId, coupon }, { new: true });
+            (_b = agent === null || agent === void 0 ? void 0 : agent.customers) === null || _b === void 0 ? void 0 : _b.push(getD);
+            agent.save();
+            res.status(200).json({ message: "Agent Changed", data: getD });
+        }
+        else {
+            res.status(400).json({
+                message: "Coupon code is incorrect",
+            });
+        }
+    }
+    else {
+        res.status(400).json({
+            message: "Agent Doesn't exist",
+        });
+    }
+});
+exports.changeAgent = changeAgent;
 const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { agentId, userId } = req.params;
     const agent = yield agentModel_1.default.findById(agentId);

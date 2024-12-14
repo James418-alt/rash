@@ -17,12 +17,30 @@ const sendEmail = async (user: any) => {
       from: `WasherMan <ebifegha123@gmail.com>`,
       to: `${user.email}`,
       subject: "Verify Your Email Account",
-      html: `<h1>Hello, ${user.name}, click on the link below to verify your email account</h1>
-<p>Your Verification code is: ${user.verifyToken}</p>
+      html: `  <div
+      style="background-color: rgb(221, 220, 220); padding: 12px; height: auto"
+    >
+      <h1 style="text-align: center">Verify your email address.</h1>
+      <p>Hi, ${user.name}</p>
 
-<button style= "background-color: black; border: none;  border-radius: 12px; color: white; height: 40px; font-size: 15px;"> 
-<a>Cick Here</a>
-</button>`,
+      <p>
+        Someone tried to sign up for a WasherMan account with ${user.email} if it was
+        you, enter this verification code in the app:
+      </p>
+      <h1>${user.verifyToken}</h1>
+      <button
+        style="
+          border: none;
+          background-color: black;
+          color: white;
+          font-size: 18px;
+          padding: 10px;
+          font-weight: bold;
+        "
+      >
+        Verify Account
+      </button>
+    </div>`,
     })
     .then(() => {
       log("Email Sent");

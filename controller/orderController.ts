@@ -3,6 +3,7 @@ import myUserModel from "../model/userModel";
 import myOrderModel from "../model/orderModel";
 import myAgentModel from "../model/agentModel";
 import { Types } from "mongoose";
+import OrderEmail from "../utils/emails/orderCreatedEmail";
 
 export const createOrder = async (req: Request, res: Response) => {
   const { userId } = req.params;
@@ -15,6 +16,7 @@ export const createOrder = async (req: Request, res: Response) => {
     user?.save();
     agent?.orders?.push(getD);
     agent?.save();
+    OrderEmail(agent, user);
     res.status(200).json({
       message: "Order Created",
       data: getD,
@@ -45,4 +47,35 @@ export const deleteOrder = async (req: Request, res: Response) => {
       message: "User not found",
     });
   }
+};
+
+export const getOneOrder = async (req: Request, res: Response) => {
+  const { userId, orderId } = req.params;
+  const user = await myUserModel.findById(userId);
+  const item = await myOrderModel.findById(orderId);
+  if (user) {
+    if (item) {
+      res.status(200).json({
+        message: "Order found",
+        data: item,
+      });
+    } else {
+      res.status(200).json({
+        message: "Order not found",
+      });
+    }
+  } else {
+    res.status(200).json({
+      message: "User doesn't exist",
+    });
+  }
+};
+
+export const viewAllOrder = async (req: Request, res: Response) => {
+  const { userId } = req.params;
+  const getD = await myUserModel.findById(userId);
+  res.status(200).json({
+    message: "Orders Found",
+    data: getD?.orders,
+  });
 };

@@ -36,6 +36,37 @@ export const Register = async (request: Request, response: Response) => {
     }
   }
 };
+
+export const changeAgent = async (req: Request, res: Response) => {
+  const { coupon } = req.body;
+  const { agentId, userId } = req.params;
+  const agent = await myAgentModel.findById(agentId);
+  const user = await myUserModel.findById(userId);
+  const prevAgent = await myAgentModel.findById(user?.agentId);
+  if (agent) {
+    if (coupon === agent.coupon) {
+      prevAgent?.customers.pull(userId);
+      prevAgent?.save();
+      const getD: any = await myUserModel.findByIdAndUpdate(
+        userId,
+        { agentId, coupon },
+        { new: true }
+      );
+      agent?.customers?.push(getD);
+      agent.save();
+
+      res.status(200).json({ message: "Agent Changed", data: getD });
+    } else {
+      res.status(400).json({
+        message: "Coupon code is incorrect",
+      });
+    }
+  } else {
+    res.status(400).json({
+      message: "Agent Doesn't exist",
+    });
+  }
+};
 export const deleteUser = async (req: Request, res: Response) => {
   const { agentId, userId } = req.params;
   const agent = await myAgentModel.findById(agentId);

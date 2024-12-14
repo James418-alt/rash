@@ -12,10 +12,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteOrder = exports.createOrder = void 0;
+exports.viewAllOrder = exports.getOneOrder = exports.deleteOrder = exports.createOrder = void 0;
 const userModel_1 = __importDefault(require("../model/userModel"));
 const orderModel_1 = __importDefault(require("../model/orderModel"));
 const agentModel_1 = __importDefault(require("../model/agentModel"));
+const orderCreatedEmail_1 = __importDefault(require("../utils/emails/orderCreatedEmail"));
 const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     var _a, _b;
     const { userId } = req.params;
@@ -28,6 +29,7 @@ const createOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         user === null || user === void 0 ? void 0 : user.save();
         (_b = agent === null || agent === void 0 ? void 0 : agent.orders) === null || _b === void 0 ? void 0 : _b.push(getD);
         agent === null || agent === void 0 ? void 0 : agent.save();
+        (0, orderCreatedEmail_1.default)(agent, user);
         res.status(200).json({
             message: "Order Created",
             data: getD,
@@ -62,3 +64,36 @@ const deleteOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.deleteOrder = deleteOrder;
+const getOneOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId, orderId } = req.params;
+    const user = yield userModel_1.default.findById(userId);
+    const item = yield orderModel_1.default.findById(orderId);
+    if (user) {
+        if (item) {
+            res.status(200).json({
+                message: "Order found",
+                data: item,
+            });
+        }
+        else {
+            res.status(200).json({
+                message: "Order not found",
+            });
+        }
+    }
+    else {
+        res.status(200).json({
+            message: "User doesn't exist",
+        });
+    }
+});
+exports.getOneOrder = getOneOrder;
+const viewAllOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId } = req.params;
+    const getD = yield userModel_1.default.findById(userId);
+    res.status(200).json({
+        message: "Orders Found",
+        data: getD === null || getD === void 0 ? void 0 : getD.orders,
+    });
+});
+exports.viewAllOrder = viewAllOrder;
