@@ -7,4 +7,5 @@ orderRoter.post("/create-order/:userId", orderController_1.createOrder);
 orderRoter.delete("/delete-order/:userId/:itemId", orderController_1.deleteOrder);
 orderRoter.get("/get-one-order/:userId/:orderId", orderController_1.getOneOrder);
 orderRoter.get("/get-all-orders", orderController_1.viewAllOrder);
+orderRoter.get("/get-adminOrder/:agentId", orderController_1.getAdminOrder);
 exports.default = orderRoter;

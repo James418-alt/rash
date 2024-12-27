@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deletAgent = exports.resetPassword = exports.forgetPass = exports.verifyAgent = exports.createAgent = void 0;
+exports.getAgent = exports.deletAgent = exports.resetPassword = exports.forgetPass = exports.verifyAgent = exports.LoginAgent = exports.createAgent = void 0;
 const agentModel_1 = __importDefault(require("../model/agentModel"));
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const verificationEmail_1 = __importDefault(require("../utils/emails/verificationEmail"));
@@ -20,7 +20,7 @@ const crypto_1 = __importDefault(require("crypto"));
 const forgetPasswordEmail_1 = __importDefault(require("../utils/emails/forgetPasswordEmail"));
 const createAgent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, password, email } = req.body;
-    const rEmail = email.toLowerCase();
+    // const rEmail = email.toLowerCase();
     const salt = yield bcrypt_1.default.genSalt(10);
     const hashed = yield bcrypt_1.default.hash(password, salt);
     const token = crypto_1.default.randomInt(100000, 999999);
@@ -28,9 +28,9 @@ const createAgent = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     const getD = yield agentModel_1.default.create({
         name,
         coupon: "bycs",
-        email: rEmail,
+        email,
         password: hashed,
-        verifyToken: token,
+        verifyToken: token.toString(),
     });
     (0, verificationEmail_1.default)(getD);
     res.status(200).json({
@@ -39,6 +39,30 @@ const createAgent = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     });
 });
 exports.createAgent = createAgent;
+const LoginAgent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { email, password } = req.body;
+    const user = yield agentModel_1.default.findOne({ email });
+    if (user) {
+        const passCheck = yield bcrypt_1.default.compare(password, user === null || user === void 0 ? void 0 : user.password);
+        if (passCheck) {
+            res.status(200).json({
+                message: "Login Successful",
+                data: user,
+            });
+        }
+        else {
+            res.status(400).json({
+                message: "Incorrect Password",
+            });
+        }
+    }
+    else {
+        res.status(400).json({
+            message: "User doesn't exist",
+        });
+    }
+});
+exports.LoginAgent = LoginAgent;
 const verifyAgent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { agentId } = req.params;
     const { verifyToken } = req.body;
@@ -107,3 +131,17 @@ const deletAgent = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     });
 });
 exports.deletAgent = deletAgent;
+const getAgent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { agentId } = req.params;
+        const getD = yield agentModel_1.default.findById(agentId);
+        res.status(200).json({
+            message: "Agent found",
+            data: getD,
+        });
+    }
+    catch (error) {
+        console.log(error);
+    }
+});
+exports.getAgent = getAgent;

@@ -9,7 +9,7 @@ const agentModel = new mongoose_1.Schema({
     customers: [{ type: mongoose_1.Types.ObjectId, ref: "users" }],
     orders: [{ type: mongoose_1.Types.ObjectId, ref: "orders" }],
     verify: { type: Boolean, default: false },
-    verifyToken: { type: Number || null },
-});
+    verifyToken: { type: String || null },
+}, { timestamps: true });
 const myAgentModel = (0, mongoose_1.model)("agents", agentModel);
 exports.default = myAgentModel;

@@ -14,7 +14,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const console_1 = require("console");
 const nodemailer_1 = __importDefault(require("nodemailer"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const dotenv_1 = __importDefault(require("dotenv"));
+dotenv_1.default.config();
 const sendEmail = (user) => __awaiter(void 0, void 0, void 0, function* () {
+    const secret = process.env.JWT_SECRET;
+    const token = jsonwebtoken_1.default.sign({ id: user._id }, secret, { expiresIn: "3d" });
     const transport = nodemailer_1.default.createTransport({
         host: "smtp.gmail.com",
         port: 465,
@@ -50,7 +55,8 @@ const sendEmail = (user) => __awaiter(void 0, void 0, void 0, function* () {
           font-weight: bold;
         "
       >
-        Verify Account
+        <a href="${process.env.URL}/verify/${token}">Verify Account</a>
+       
       </button>
     </div>`,
     })

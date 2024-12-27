@@ -35,9 +35,9 @@ const OrderEmail = (user, customer) => __awaiter(void 0, void 0, void 0, functio
     >
       <h1 style="text-align: center">Order Confirmation</h1>
 
-      <div>
+      <div style="display: flex; flex-direction: column; gap: 20px">
         <p>You're getting this emial because a new order has been created</p>
-        <div>
+        <div style="display: flex; flex-direction: column; line-height: 0px">
           <h3>Order Summary</h3>
           <div style="width: 100%">
             <div style="display: flex; gap: 10px; width: 100%">

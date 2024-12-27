@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.viewAllOrder = exports.getOneOrder = exports.deleteOrder = exports.createOrder = void 0;
+exports.viewAllOrder = exports.getAdminOrder = exports.getOneOrder = exports.deleteOrder = exports.createOrder = void 0;
 const userModel_1 = __importDefault(require("../model/userModel"));
 const orderModel_1 = __importDefault(require("../model/orderModel"));
 const agentModel_1 = __importDefault(require("../model/agentModel"));
@@ -88,6 +88,15 @@ const getOneOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.getOneOrder = getOneOrder;
+const getAdminOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { agentId } = req.params;
+    const getD = yield agentModel_1.default.findById(agentId).populate("orders");
+    res.status(200).json({
+        message: "Orders Found",
+        data: getD === null || getD === void 0 ? void 0 : getD.orders,
+    });
+});
+exports.getAdminOrder = getAdminOrder;
 const viewAllOrder = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.params;
     const getD = yield userModel_1.default.findById(userId);
