@@ -8,7 +8,7 @@ import forgetPassword from "../utils/emails/forgetPasswordEmail";
 
 export const createAgent = async (req: Request, res: Response) => {
   const { name, password, email } = req.body;
-  const rEmail = email.toLowerCase();
+  // const rEmail = email.toLowerCase();
   const salt = await bcrypt.genSalt(10);
   const hashed = await bcrypt.hash(password, salt);
   const token = crypto.randomInt(100000, 999999);
@@ -16,15 +16,37 @@ export const createAgent = async (req: Request, res: Response) => {
   const getD = await myAgentModel.create({
     name,
     coupon: "bycs",
-    email: rEmail,
+    email,
     password: hashed,
-    verifyToken: token,
+    verifyToken: token.toString(),
   });
   sendEmail(getD);
   res.status(200).json({
     message: "Agent Created",
     data: getD,
   });
+};
+
+export const LoginAgent = async (req: Request, res: Response) => {
+  const { email, password } = req.body;
+  const user: any = await myAgentModel.findOne({ email });
+  if (user) {
+    const passCheck = await bcrypt.compare(password, user?.password);
+    if (passCheck) {
+      res.status(200).json({
+        message: "Login Successful",
+        data: user,
+      });
+    } else {
+      res.status(400).json({
+        message: "Incorrect Password",
+      });
+    }
+  } else {
+    res.status(400).json({
+      message: "User doesn't exist",
+    });
+  }
 };
 
 export const verifyAgent = async (req: Request, res: Response) => {
@@ -100,4 +122,17 @@ export const deletAgent = async (req: Request, res: Response) => {
     message: "Agent Deleted",
     data: getD,
   });
+};
+
+export const getAgent = async (req: Request, res: Response) => {
+  try {
+    const { agentId } = req.params;
+    const getD = await myAgentModel.findById(agentId);
+    res.status(200).json({
+      message: "Agent found",
+      data: getD,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };

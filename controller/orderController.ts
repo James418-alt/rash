@@ -71,6 +71,15 @@ export const getOneOrder = async (req: Request, res: Response) => {
   }
 };
 
+export const getAdminOrder = async (req: Request, res: Response) => {
+  const { agentId } = req.params;
+  const getD = await myAgentModel.findById(agentId).populate("orders");
+  res.status(200).json({
+    message: "Orders Found",
+    data: getD?.orders,
+  });
+};
+
 export const viewAllOrder = async (req: Request, res: Response) => {
   const { userId } = req.params;
   const getD = await myUserModel.findById(userId);

@@ -16,6 +16,7 @@ export const Increase = async (req: Request, res: Response) => {
     data: getD,
   });
 };
+
 export const Register = async (request: Request, response: Response) => {
   const { name, coupon } = request.body;
   const { agentId } = request.params;
@@ -67,6 +68,7 @@ export const changeAgent = async (req: Request, res: Response) => {
     });
   }
 };
+
 export const deleteUser = async (req: Request, res: Response) => {
   const { agentId, userId } = req.params;
   const agent = await myAgentModel.findById(agentId);

@@ -1,7 +1,12 @@
 import { log } from "console";
 import nodemailer from "nodemailer";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+dotenv.config();
 
 const sendEmail = async (user: any) => {
+  const secret = process.env.JWT_SECRET as string;
+  const token = jwt.sign({ id: user._id }, secret, { expiresIn: "3d" });
   const transport = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 465,
@@ -38,7 +43,8 @@ const sendEmail = async (user: any) => {
           font-weight: bold;
         "
       >
-        Verify Account
+        <a href="${process.env.URL}/verify/${token}">Verify Account</a>
+       
       </button>
     </div>`,
     })
